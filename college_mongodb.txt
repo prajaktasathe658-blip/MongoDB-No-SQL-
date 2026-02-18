@@ -1,0 +1,607 @@
+collegedb> show dbs
+admin        40.00 KiB
+collegedb     8.00 KiB
+collegedbs    8.00 KiB
+config      108.00 KiB
+local       104.00 KiB
+collegedb> use simple
+switched to db simple
+simple> use collegedb
+switched to db collegedb
+collegedb> show collections
+teacherInfo
+collegedb> db.createCollection('studentinfo')
+{ ok: 1 }
+collegedb> show collections
+studentinfo
+teacherInfo
+collegedb> db.createCollection('courseinfo')
+{ ok: 1 }
+collegedb> show collections
+courseinfo
+studentinfo
+teacherInfo
+collegedb>
+
+collegedb> db.studentinfo
+collegedb.studentinfo
+collegedb> db.studentinfo.insertOne({name:"prajakta",age:21:,cgpa:9.2})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:48)
+
+> 1 | db.studentinfo.insertOne({name:"prajakta",age:21:,cgpa:9.2})
+    |                                                 ^
+  2 |
+
+collegedb> db.studentinfo.insertOne({name:"prajakta",age:21,cgpa:9.2})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6994322730f63fc0f94d7942')
+}
+collegedb> db.studentinfo.insertMany([{name:"virat kohli",age:37,cgpa:8.5},{name:"sunil chettry",age:30,gpa:7.8},{name:"rohit",age:30,gpa:9.8}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('699433d730f63fc0f94d7943'),
+    '1': ObjectId('699433d730f63fc0f94d7944'),
+    '2': ObjectId('699433d730f63fc0f94d7945')
+  }
+}
+collegedb> show collections
+courseinfo
+studentinfo
+teacherInfo
+collegedb> db.teacherInfo.insertOne({name:"gautam gambhir",age:45,subject:"head coach", exp:10})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6994381a30f63fc0f94d7946')
+}
+collegedb> db.teacherInfo.insertMany([{name:"sachin tendulkar",age:45,subject:"batting coach",exp:18},{name:"ravi shastri",age:50,subject:"assistant coach"},{name:"ashish nehra", age:50,subject:["bowling caoch","physeo coach"],exp:20}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('699439b430f63fc0f94d7947'),
+    '1': ObjectId('699439b430f63fc0f94d7948'),
+    '2': ObjectId('699439b430f63fc0f94d7949')
+  }
+}
+collegedb> db.studentinfo.find()
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find().limit(1)
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  }
+]
+collegedb> db.studentinfo.find().sort({age:-1})
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  },
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  }
+]
+collegedb> db.studentinfo.find().sort({age:-1}).limit(1)
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  }
+]
+collegedb> db.studentinfo.find({age:20})
+
+collegedb> db.studentinfo.find({name:true})
+
+collegedb> db.studentinfo.find({name:true})
+
+collegedb> db.studentinfo.find()
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({age:21},{name:true,age:true})
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21
+  }
+]
+collegedb> db.teacherInfo
+collegedb.teacherInfo
+collegedb> db.teacherInfo.update({name:"anil k"},{$set:{exp=2}})
+...
+... db
+Uncaught:
+SyntaxError: Invalid shorthand property initializer. (1:48)
+
+> 1 | db.teacherInfo.update({name:"anil k"},{$set:{exp=2}})
+    |                                                 ^
+  2 |
+  3 | db
+  4 |
+
+collegedb> db.teacherInfo.updateOne({name:"anil k"},{$set:{exp=2}})
+... db
+Uncaught:
+SyntaxError: Invalid shorthand property initializer. (1:51)
+
+> 1 | db.teacherInfo.updateOne({name:"anil k"},{$set:{exp=2}})
+    |                                                    ^
+  2 | db
+  3 |
+
+collegedb> db.teacherInfo.updateOne({name:"anil k"},{$set:{exp=22}})
+... db
+Uncaught:
+SyntaxError: Invalid shorthand property initializer. (1:51)
+
+> 1 | db.teacherInfo.updateOne({name:"anil k"},{$set:{exp=22}})
+    |                                                    ^
+  2 | db
+  3 |
+
+collegedb> db.teacherInfo.updateOne({name:"anil k"},{$set:{exp:22}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+collegedb> db.teacherInfo.find()
+[
+  {
+    _id: ObjectId('6994381a30f63fc0f94d7946'),
+    name: 'gautam gambhir',
+    age: 45,
+    subject: 'head coach',
+    exp: 10
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7947'),
+    name: 'sachin tendulkar',
+    age: 45,
+    subject: 'batting coach',
+    exp: 18
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7948'),
+    name: 'ravi shastri',
+    age: 50,
+    subject: 'assistant coach'
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7949'),
+    name: 'ashish nehra',
+    age: 50,
+    subject: [ 'bowling caoch', 'physeo coach' ],
+    exp: 20
+  }
+]
+collegedb> db.teacherInfo.updateOne({name:"gautam gambhir"},{$set:{exp:22}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+collegedb> db.teacherInfo.find()
+[
+  {
+    _id: ObjectId('6994381a30f63fc0f94d7946'),
+    name: 'gautam gambhir',
+    age: 45,
+    subject: 'head coach',
+    exp: 22
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7947'),
+    name: 'sachin tendulkar',
+    age: 45,
+    subject: 'batting coach',
+    exp: 18
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7948'),
+    name: 'ravi shastri',
+    age: 50,
+    subject: 'assistant coach'
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7949'),
+    name: 'ashish nehra',
+    age: 50,
+    subject: [ 'bowling caoch', 'physeo coach' ],
+    exp: 20
+  }
+]
+collegedb> db.teacherInfo.updateOne({name:"ravi shastri"},{$set:{exp:22}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+collegedb> db.teacherInfo.find()
+[
+  {
+    _id: ObjectId('6994381a30f63fc0f94d7946'),
+    name: 'gautam gambhir',
+    age: 45,
+    subject: 'head coach',
+    exp: 22
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7947'),
+    name: 'sachin tendulkar',
+    age: 45,
+    subject: 'batting coach',
+    exp: 18
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7948'),
+    name: 'ravi shastri',
+    age: 50,
+    subject: 'assistant coach',
+    exp: 22
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7949'),
+    name: 'ashish nehra',
+    age: 50,
+    subject: [ 'bowling caoch', 'physeo coach' ],
+    exp: 20
+  }
+]
+collegedb>
+test> use collegedb
+switched to db collegedb
+collegedb> show collections
+courseinfo
+studentinfo
+teacherInfo
+collegedb> db.studentinfo.find()
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({name:{$eq:"virat kohli"}})
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  }
+]
+collegedb> db.studentinfo.find({name:{$ne:"virat kohli"}})
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({age:{$gt:30}})
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  }
+]
+collegedb> db.studentinfo.find({age:{$gte:30,$lte:20}},{name:true,age:true})
+
+collegedb> db.studentinfo.find({age:{$gte:31,$lte:20}},{name:true,age:true})
+
+collegedb> db.studentinfo.find({age:{$gte:31,$lte:21}},{name:true,age:true})
+
+collegedb> db.studentinfo.find({age:{$in:[20,21,30,40]})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:44)
+
+> 1 | db.studentinfo.find({age:{$in:[20,21,30,40]})
+    |                                             ^
+  2 |
+
+collegedb> db.studentinfo.find({age:{$in:[20,21,30,40]}})
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({$and:[{name:"virat kohli",name:"rohit"},{age:{$gte:21}}]})
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({$and:[{name:"prajakta",name:"rohit"},{age:{$gte:30}}]})
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({$and:[{name:"prajakta",name:"rohit"},{age:{$gte:20}}]})
+[
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({$or:[{name:"prajakta",name:"rohit"},{age:{$gte:20}}]})
+[
+  {
+    _id: ObjectId('6994322730f63fc0f94d7942'),
+    name: 'prajakta',
+    age: 21,
+    cgpa: 9.2
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7943'),
+    name: 'virat kohli',
+    age: 37,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7944'),
+    name: 'sunil chettry',
+    age: 30,
+    gpa: 7.8
+  },
+  {
+    _id: ObjectId('699433d730f63fc0f94d7945'),
+    name: 'rohit',
+    age: 30,
+    gpa: 9.8
+  }
+]
+collegedb> db.studentinfo.find({$nor:[{name:"prajakta",name:"rohit"},{age:{$gte:20}}]})
+
+collegedb> db.teacherInfo.find()
+[
+  {
+    _id: ObjectId('6994381a30f63fc0f94d7946'),
+    name: 'gautam gambhir',
+    age: 45,
+    subject: 'head coach',
+    exp: 22
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7947'),
+    name: 'sachin tendulkar',
+    age: 45,
+    subject: 'batting coach',
+    exp: 18
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7948'),
+    name: 'ravi shastri',
+    age: 50,
+    subject: 'assistant coach',
+    exp: 22
+  },
+  {
+    _id: ObjectId('699439b430f63fc0f94d7949'),
+    name: 'ashish nehra',
+    age: 50,
+    subject: [ 'bowling caoch', 'physeo coach' ],
+    exp: 20
+  }
+]
+collegedb> db.teacherInfo.find({name:"sachin tendulkar"}).explain(executionsStats)
+ReferenceError: executionsStats is not defined
+collegedb> db.teacherInfo.find({name:"sachin tendulkar"}).explain(executionStats)
+ReferenceError: executionStats is not defined
+collegedb> db.teacherInfo.find({name:"sachin tendulkar"}).explain('executionStats')
+{
+  explainVersion: '1',
+  queryPlanner: {
+    namespace: 'collegedb.teacherInfo',
+    parsedQuery: { name: { '$eq': 'sachin tendulkar' } },
+    indexFilterSet: false,
+    planCacheShapeHash: '544F3E5C',
+    planCacheKey: 'B9363AF4',
+    optimizationTimeMillis: 0,
+    maxIndexedOrSolutionsReached: false,
+    maxIndexedAndSolutionsReached: false,
+    maxScansToExplodeReached: false,
+    prunedSimilarIndexes: false,
+    winningPlan: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: { name: { '$eq': 'sachin tendulkar' } },
+      direction: 'forward'
+    },
+    rejectedPlans: []
+  },
+  executionStats: {
+    executionSuccess: true,
+    nReturned: 1,
+    executionTimeMillis: 9,
+    totalKeysExamined: 0,
+    totalDocsExamined: 4,
+    executionStages: {
+      isCached: false,
+      stage: 'COLLSCAN',
+      filter: { name: { '$eq': 'sachin tendulkar' } },
+      nReturned: 1,
+      executionTimeMillisEstimate: 0,
+      works: 5,
+      advanced: 1,
+      needTime: 3,
+      needYield: 0,
+      saveState: 0,
+      restoreState: 0,
+      isEOF: 1,
+      direction: 'forward',
+      docsExamined: 4
+    }
+  },
+  queryShapeHash: 'D21EBB8684A51FBCA15194035678AFC1FBB24476702CBB379076800465CD7358',
+  command: {
+    find: 'teacherInfo',
+    filter: { name: 'sachin tendulkar' },
+    '$db': 'collegedb'
+  },
+  serverInfo: {
+    host: 'DESKTOP-02B5FCB',
+    port: 27017,
+    version: '8.0.4',
+    gitVersion: 'bc35ab4305d9920d9d0491c1c9ef9b72383d31f9'
+  },
+  serverParameters: {
+    internalQueryFacetBufferSizeBytes: 104857600,
+    internalQueryFacetMaxOutputDocSizeBytes: 104857600,
+    internalLookupStageIntermediateDocumentMaxSizeBytes: 104857600,
+    internalDocumentSourceGroupMaxMemoryBytes: 104857600,
+    internalQueryMaxBlockingSortMemoryUsageBytes: 104857600,
+    internalQueryProhibitBlockingMergeOnMongoS: 0,
+    internalQueryMaxAddToSetBytes: 104857600,
+    internalDocumentSourceSetWindowFieldsMaxMemoryBytes: 104857600,
+    internalQueryFrameworkControl: 'trySbeRestricted',
+    internalQueryPlannerIgnoreIndexWithCollationForRegex: 1
+  },
+  ok: 1
+}
+collegedb> db.teacherInfo.createIndex({name:1})
+name_1
+collegedb> db.teacherInfo.getIndexes()
+[
+  { v: 2, key: { _id: 1 }, name: '_id_' },
+  { v: 2, key: { name: 1 }, name: 'name_1' }
+]
+collegedb>
